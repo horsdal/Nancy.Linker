@@ -34,7 +34,12 @@
       return uriTemplate.BindByName(baseUri, ToDictionary(parameters ?? new {}));
     }
 
-    private static IDictionary<string, string> ToDictionary(object anonymousInstance)
+    public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
+    {
+      return new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative);
+    }
+
+      private static IDictionary<string, string> ToDictionary(object anonymousInstance)
     {
       var dictionary = anonymousInstance as IDictionary<string, string>;
       if (dictionary != null) return dictionary;

@@ -43,6 +43,22 @@
     }
 
     [Fact]
+    public void generate_relative_uri_correctly_when_route_has_no_params()
+    {
+      var uriString = TestModule.linker.BuildRelativeUri(app.Get("/foo").Context, "foo");
+
+      Assert.Equal("/foo", uriString.ToString());
+    }
+
+    [Fact]
+    public void generate_relative_uri_correctly_when_route_has_params()
+    {
+      var uriString = TestModule.linker.BuildRelativeUri(app.Get("/foo").Context, "bar", new { id = 123 });
+
+      Assert.Equal("/bar/123", uriString.ToString());
+    }
+
+    [Fact]
     public void throw_if_parameter_from_template_cannot_be_bound()
     {
       Assert.Throws<ArgumentException>(() =>
