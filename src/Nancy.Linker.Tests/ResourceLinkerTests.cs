@@ -23,7 +23,7 @@
 
     public ResourceLinker_Should()
     {
-      app = new Browser(with => with.Module<TestModule>(), defaults: to => to.HostName("localhost"));
+      app = new Browser(with => with.Module<TestModule>(), defaults: to => to.HostName("nancyfx.org"));
     }
 
     [Fact]
@@ -31,7 +31,7 @@
     {
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "foo");
 
-      Assert.Equal("http://localhost/foo", uriString.ToString());
+      Assert.Equal("http://nancyfx.org/foo", uriString.ToString());
     }
 
     [Fact]
@@ -39,7 +39,7 @@
     {
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar", new {id = 123 });
 
-      Assert.Equal("http://localhost/bar/123", uriString.ToString());
+      Assert.Equal("http://nancyfx.org/bar/123", uriString.ToString());
     }
 
     [Fact]
@@ -64,6 +64,16 @@
       Assert.Throws<ArgumentException>(() =>
         TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar")
       );
+    }
+
+    [Fact]
+    public void default_to_localhost_when_request_has_no_host()
+    {
+      var appWithoutHost = new Browser(with => with.Module<TestModule>());
+
+      var uriString = TestModule.linker.BuildAbsoluteUri(appWithoutHost.Get("/foo").Context, "bar", new { id = 123 });
+
+      Assert.Equal("http://localhost/bar/123", uriString.ToString());
     }
   }
 }

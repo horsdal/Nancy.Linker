@@ -28,10 +28,18 @@
 
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
     {
-      var baseUri = new Uri(context.Request.Url.SiteBase.TrimEnd('/'));
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var uriTemplate = new UriTemplate(pathTemplate, true);
-      return uriTemplate.BindByName(baseUri, ToDictionary(parameters ?? new {}));
+      return uriTemplate.BindByName(GetBaseUri(context), ToDictionary(parameters ?? new {}));
+    }
+
+    private static Uri GetBaseUri(NancyContext context)
+    {
+      var baseUriString =
+        !string.IsNullOrWhiteSpace(context.Request.Url.HostName)
+          ? context.Request.Url.SiteBase.TrimEnd('/')
+          : context.Request.Url.Scheme + "://localhost";
+      return new Uri(baseUriString);
     }
 
     public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
