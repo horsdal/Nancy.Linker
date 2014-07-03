@@ -26,7 +26,7 @@
       this.routesProvider = routesProvider;
     }
 
-    public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters)
+    public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
     {
       var baseUri = new Uri(context.Request.Url.SiteBase.TrimEnd('/'));
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;

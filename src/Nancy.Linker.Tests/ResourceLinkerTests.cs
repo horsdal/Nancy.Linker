@@ -29,7 +29,7 @@
     [Fact]
     public void generate_absolute_uri_correctly_when_route_has_no_params()
     {
-      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "foo",  new {});
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "foo");
 
       Assert.Equal("http://localhost/foo", uriString.ToString());
     }
@@ -46,7 +46,7 @@
     public void throw_if_parameter_from_template_cannot_be_bound()
     {
       Assert.Throws<ArgumentException>(() =>
-        TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar", new { })
+        TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar")
       );
     }
   }
