@@ -15,9 +15,9 @@
     {
       get
       {
-        if (allRoutes == null)
-          allRoutes = routesProvider.GetCache().SelectMany(pair => pair.Value.Select(tuple => tuple.Item2)).ToList();
-        return allRoutes;
+        if (this.allRoutes == null)
+          this.allRoutes = this.routesProvider.GetCache().SelectMany(pair => pair.Value.Select(tuple => tuple.Item2)).ToList();
+        return this.allRoutes;
       }
     }
 
@@ -29,7 +29,7 @@
     public string BuildUriString(NancyContext context, string routeName, dynamic parameters)
     {
       var baseUri = new Uri(context.Request.Url.SiteBase.TrimEnd('/'));
-      var pathTemplate = AllRoutes.Single(r => r.Name == routeName).Path;
+      var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var uriTemplate = new UriTemplate(pathTemplate, true);
       return uriTemplate.BindByName(baseUri, ToDictionary(parameters ?? new {})).ToString();
     }
