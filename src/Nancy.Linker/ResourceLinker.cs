@@ -1,4 +1,4 @@
-﻿namespace RestBucks.Infrastructure.Linking
+﻿namespace Nancy.Linker
 {
   using System;
   using System.Collections.Generic;
@@ -28,7 +28,7 @@
 
     public string BuildUriString(NancyContext context, string routeName, dynamic parameters)
     {
-      var baseUri = new Uri(context.Request.BaseUri().TrimEnd('/'));
+      var baseUri = new Uri(context.Request.Url.SiteBase.TrimEnd('/'));
       var pathTemplate = AllRoutes.Single(r => r.Name == routeName).Path;
       var uriTemplate = new UriTemplate(pathTemplate, true);
       return uriTemplate.BindByName(baseUri, ToDictionary(parameters ?? new {})).ToString();

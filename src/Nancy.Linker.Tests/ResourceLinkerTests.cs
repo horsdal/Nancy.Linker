@@ -1,9 +1,5 @@
-﻿namespace RestBucks.Tests.Infrastructure.Linking
+﻿namespace Nancy.Linker.Tests
 {
-  using System;
-  using NUnit.Framework;
-  using RestBucks.Infrastructure.Linking;
-
 #if false
   public class ResourceLinkerTests
   {
