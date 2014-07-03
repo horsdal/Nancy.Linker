@@ -26,12 +26,12 @@
       this.routesProvider = routesProvider;
     }
 
-    public string BuildUriString(NancyContext context, string routeName, dynamic parameters)
+    public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters)
     {
       var baseUri = new Uri(context.Request.Url.SiteBase.TrimEnd('/'));
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var uriTemplate = new UriTemplate(pathTemplate, true);
-      return uriTemplate.BindByName(baseUri, ToDictionary(parameters ?? new {})).ToString();
+      return uriTemplate.BindByName(baseUri, ToDictionary(parameters ?? new {}));
     }
 
     private static IDictionary<string, string> ToDictionary(object anonymousInstance)

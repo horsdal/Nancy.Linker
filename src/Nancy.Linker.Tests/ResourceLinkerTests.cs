@@ -1,59 +1,50 @@
 ﻿namespace Nancy.Linker.Tests
 {
-#if false
+  using System.Runtime.InteropServices;
+  using Testing;
+  using Xunit;
+
   public class ResourceLinkerTests
   {
-    [Test]
+    private Browser app;
+
+    public class TestModule : NancyModule
+    {
+      public static ResourceLinker linker;
+
+      public TestModule(ResourceLinker linker)
+      {
+        TestModule.linker = linker;
+        Get["foo", "/foo"] = _ => 200;
+        Get["bar", "/bar/{id}"] = _ => 200;
+      }
+    }
+
+    public ResourceLinkerTests()
+    {
+      app = new Browser(with => with.Module<TestModule>(), defaults: to => to.HostName("localhost"));
+    }
+
+    [Fact]
     public void Link_generated_is_correct_when_base_uri_has_trailing_slash()
     {
-      var resourceLinker = new ResourceLinker("http://localhost/");
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "foo",  new {});
 
-      var uriString = resourceLinker.BuildUriString("/foo", "", new {});
-
-      Assert.That(uriString, Is.EqualTo("http://localhost/foo"));
+      Assert.Equal("http://localhost/foo", uriString.ToString());
     }
 
-    [Test]
-    public void Link_generated_is_correct_when_base_uri_does_not_have_trailing_slash()
-    {
-      var resourceLinker = new ResourceLinker("http://localhost");
 
-      var uriString = resourceLinker.BuildUriString("/foo", "", new {});
-
-      Assert.That(uriString, Is.EqualTo("http://localhost/foo"));
-    }
-
-    [Test]
-    public void Link_generated_is_correct_with_simple_template()
-    {
-      var resourceLinker = new ResourceLinker("http://localhost");
-
-      var uriString = resourceLinker.BuildUriString("/foo", "/bar", new {});
-
-      Assert.That(uriString, Is.EqualTo("http://localhost/foo/bar"));
-    }
-
-    [Test]
+    [Fact]
     public void Link_generated_is_correct_with_bound_parameter()
     {
-      var resourceLinker = new ResourceLinker("http://localhost");
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar", new {id = 123 });
 
-      var uriString = resourceLinker.BuildUriString("/foo", "/bar/{id}", new {id = 123});
-
-      Assert.That(uriString, Is.EqualTo("http://localhost/foo/bar/123"));
+      Assert.Equal("http://localhost/bar/123", uriString.ToString());
     }
 
-    [Test]
+    [Fact]
     public void Argument_exception_is_thrown_if_parameter_from_template_cannot_be_bound()
     {
-      var resourceLinker = new ResourceLinker("http://localhost");
-
-      var exception = Assert.Throws<ArgumentException>(() => resourceLinker.BuildUriString("/foo", "/bar/{id}", new {}));
-
-      Assert.That(exception.Message,
-                  Is.EqualTo(
-                    "The path variable 'ID' in the UriTemplate must be bound to a non-empty string value.\r\nParameter name: parameters"));
     }
   }
-  #endif
 }
