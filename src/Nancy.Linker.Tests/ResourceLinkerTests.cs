@@ -1,10 +1,11 @@
 ﻿namespace Nancy.Linker.Tests
 {
+  using System;
   using System.Runtime.InteropServices;
   using Testing;
   using Xunit;
 
-  public class ResourceLinkerTests
+  public class ResourceLinker_Should
   {
     private Browser app;
 
@@ -20,22 +21,21 @@
       }
     }
 
-    public ResourceLinkerTests()
+    public ResourceLinker_Should()
     {
       app = new Browser(with => with.Module<TestModule>(), defaults: to => to.HostName("localhost"));
     }
 
     [Fact]
-    public void Link_generated_is_correct_when_base_uri_has_trailing_slash()
+    public void generate_absolute_uri_correctly_when_route_has_no_params()
     {
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "foo",  new {});
 
       Assert.Equal("http://localhost/foo", uriString.ToString());
     }
 
-
     [Fact]
-    public void Link_generated_is_correct_with_bound_parameter()
+    public void generate_absolute_uri_correctly_when_route_has_params()
     {
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar", new {id = 123 });
 
@@ -43,8 +43,11 @@
     }
 
     [Fact]
-    public void Argument_exception_is_thrown_if_parameter_from_template_cannot_be_bound()
+    public void throw_if_parameter_from_template_cannot_be_bound()
     {
+      Assert.Throws<ArgumentException>(() =>
+        TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar", new { })
+      );
     }
   }
 }
