@@ -4,12 +4,14 @@
   using System.Collections.Generic;
   using System.ComponentModel;
   using System.Linq;
+  using Extensions;
   using Nancy;
   using Nancy.Routing;
 
   public class ResourceLinker
   {
     private readonly IRouteCacheProvider routesProvider;
+    private readonly IRouteSegmentExtractor extractor;
     private List<RouteDescription> allRoutes = null; 
     private List<RouteDescription> AllRoutes
     {
@@ -21,21 +23,38 @@
       }
     }
 
-    public ResourceLinker(IRouteCacheProvider routesProvider)
+    public ResourceLinker(IRouteCacheProvider routesProvider, IRouteSegmentExtractor extractor)
     {
       this.routesProvider = routesProvider;
+      this.extractor = extractor;
     }
 
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
     {
+      var parameterDictionary = ToDictionary(parameters as object ?? new { });
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
-      var uriTemplate = new UriTemplate(pathTemplate, true);
-      pathTemplate = uriTemplate
-        .PathSegmentVariableNames.Where(n => n.Contains(":"))
-        .Aggregate(pathTemplate.ToLowerInvariant(), (current, segment) => current.Replace(segment.ToLowerInvariant(), segment.Substring(0, segment.IndexOf(":", StringComparison.InvariantCultureIgnoreCase))));
-      uriTemplate = new UriTemplate(pathTemplate, true);
-
-      return uriTemplate.BindByName(GetBaseUri(context), ToDictionary(parameters ?? new {}));
+      var segments = extractor.Extract(pathTemplate);
+      var realizedPath = 
+        segments.Aggregate((current, segment) =>
+      {
+        string res = null;
+        if (segment.IsParameterized())
+        {
+          var segmentInfo = segment.GetParameterDetails().Single();
+          if (!segmentInfo.IsOptional || string.IsNullOrEmpty(segmentInfo.DefaultValue))
+            parameterDictionary.TryGetValue(segmentInfo.Name, out res);
+          else
+            res = parameterDictionary.ContainsKey(segmentInfo.Name) ? parameterDictionary[segmentInfo.Name] : segmentInfo.DefaultValue;
+        }
+        else if (segment.Contains(':'))
+          parameterDictionary.TryGetValue(segment.Substring(1, segment.IndexOf(':') - 1).Trim(), out res);
+        else
+          res = segment;
+        if (res == null)
+          throw new ArgumentException(string.Format("Value for path segment {0} missing", segment), "parameters");
+        return string.Concat(current, "/", res);
+      });
+      return new Uri(GetBaseUri(context), realizedPath);
     }
 
     private static Uri GetBaseUri(NancyContext context)

@@ -1,8 +1,6 @@
 ﻿namespace Nancy.Linker.Tests
 {
   using System;
-  using System.Runtime.InteropServices;
-  using System.Text.RegularExpressions;
   using Testing;
   using Xunit;
 
@@ -52,7 +50,7 @@
     {
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "constraint", new { id = 123 });
 
-      Assert.Equal("http://nancyfx.org/intconstraint/123", uriString.ToString());
+      Assert.Equal("http://nancyfx.org/intConstraint/123", uriString.ToString());
     }
 
     [Fact(Skip = "might not want to support regex routes??")]
