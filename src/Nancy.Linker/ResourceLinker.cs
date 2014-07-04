@@ -47,10 +47,17 @@
 
     private static string GetSegmentValue(string segment, IDictionary<string, string> parameterDictionary, string current)
     {
+      NotRegexSegment(segment);
       var res = TryGetParameterValue(segment, parameterDictionary);
       if (res == null)
         throw new ArgumentException(string.Format("Value for path segment {0} missing", segment), "parameters");
       return string.Concat(current, "/", res);
+    }
+
+    private static void NotRegexSegment(string segment)
+    {
+      if (segment.StartsWith("("))
+        throw new ArgumentException("Building URI for routes with regex segment not supported", "routeName");
     }
 
     private static string TryGetParameterValue(string segment, IDictionary<string, string> parameterDictionary)

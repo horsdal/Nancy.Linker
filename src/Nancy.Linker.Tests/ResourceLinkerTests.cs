@@ -10,9 +10,9 @@
 
     public class TestModule : NancyModule
     {
-      public static ResourceLinker linker;
+      public static IResourceLinker linker;
 
-      public TestModule(ResourceLinker linker)
+      public TestModule(IResourceLinker linker)
       {
         TestModule.linker = linker;
         Get["foo", "/foo"] = _ => 200;
@@ -26,7 +26,12 @@
 
     public ResourceLinker_Should()
     {
-      app = new Browser(with => with.Module<TestModule>(), defaults: to => to.HostName("nancyfx.org"));
+      app = new Browser(with =>
+      {
+        with.Module<TestModule>();
+        with.Dependency<ResourceLinker>();
+      }, 
+      defaults: to => to.HostName("nancyfx.org"));
     }
 
     [Fact]
@@ -102,9 +107,21 @@
     }
 
     [Fact]
+    public void throw_if_route_has_regex()
+    {
+      Assert.Throws<ArgumentException>(() =>
+        TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "regex")
+      );
+    }
+
+    [Fact]
     public void default_to_localhost_when_request_has_no_host()
     {
-      var appWithoutHost = new Browser(with => with.Module<TestModule>());
+      var appWithoutHost = new Browser(with =>
+      {
+        with.Module<TestModule>();
+        with.Dependency<ResourceLinker>();
+      });
 
       var uriString = TestModule.linker.BuildAbsoluteUri(appWithoutHost.Get("/foo").Context, "bar", new { id = 123 });
 
