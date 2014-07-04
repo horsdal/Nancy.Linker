@@ -8,7 +8,13 @@
   using Nancy;
   using Nancy.Routing;
 
-  public class ResourceLinker
+  public interface IResourceLinker
+  {
+    Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null);
+    Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null);
+  }
+
+  public class ResourceLinker : IResourceLinker
   {
     private readonly IRouteCacheProvider routesProvider;
     private readonly IRouteSegmentExtractor segmentExtractor;
