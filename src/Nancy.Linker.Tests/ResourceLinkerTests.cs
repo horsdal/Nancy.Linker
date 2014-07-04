@@ -26,11 +26,7 @@
 
     public ResourceLinker_Should()
     {
-      app = new Browser(with =>
-      {
-        with.Module<TestModule>();
-        with.Dependency<ResourceLinker>();
-      }, 
+      app = new Browser(with => with.Module<TestModule>(), 
       defaults: to => to.HostName("nancyfx.org"));
     }
 
@@ -117,11 +113,7 @@
     [Fact]
     public void default_to_localhost_when_request_has_no_host()
     {
-      var appWithoutHost = new Browser(with =>
-      {
-        with.Module<TestModule>();
-        with.Dependency<ResourceLinker>();
-      });
+      var appWithoutHost = new Browser(with => with.Module<TestModule>());
 
       var uriString = TestModule.linker.BuildAbsoluteUri(appWithoutHost.Get("/foo").Context, "bar", new { id = 123 });
 
