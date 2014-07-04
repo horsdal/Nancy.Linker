@@ -30,6 +30,11 @@
     {
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var uriTemplate = new UriTemplate(pathTemplate, true);
+      pathTemplate = uriTemplate
+        .PathSegmentVariableNames.Where(n => n.Contains(":"))
+        .Aggregate(pathTemplate.ToLowerInvariant(), (current, segment) => current.Replace(segment.ToLowerInvariant(), segment.Substring(0, segment.IndexOf(":", StringComparison.InvariantCultureIgnoreCase))));
+      uriTemplate = new UriTemplate(pathTemplate, true);
+
       return uriTemplate.BindByName(GetBaseUri(context), ToDictionary(parameters ?? new {}));
     }
 

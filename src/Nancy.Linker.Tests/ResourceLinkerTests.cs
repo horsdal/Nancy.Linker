@@ -2,6 +2,7 @@
 {
   using System;
   using System.Runtime.InteropServices;
+  using System.Text.RegularExpressions;
   using Testing;
   using Xunit;
 
@@ -18,6 +19,10 @@
         TestModule.linker = linker;
         Get["foo", "/foo"] = _ => 200;
         Get["bar", "/bar/{id}"] = _ => 200;
+        Get["constraint", "/intConstraint/{id: int}"] = _ => 200;
+        Get["regex", @"/regex/(?<id>[\d]{ 1,7})"] = _ => 200;
+        Get["optional", "optional/{id?}"] = _ => 200;
+        Get["default", "default/{id?123}"] = _ => 200;
       }
     }
 
@@ -40,6 +45,38 @@
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar", new {id = 123 });
 
       Assert.Equal("http://nancyfx.org/bar/123", uriString.ToString());
+    }
+
+    [Fact]
+    public void generate_absolute_uri_correctly_when_route_has_constraint()
+    {
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "constraint", new { id = 123 });
+
+      Assert.Equal("http://nancyfx.org/intconstraint/123", uriString.ToString());
+    }
+
+    [Fact(Skip = "might not want to support regex routes??")]
+    public void generate_absolute_uri_correctly_when_route_has_regex()
+    {
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "regex", new { id = 123 });
+
+      Assert.Equal("http://nancyfx.org/regex/123", uriString.ToString());
+    }
+
+    [Fact]
+    public void generate_absolute_uri_correctly_when_route_has_optional()
+    {
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "optional", new { id = 123 });
+
+      Assert.Equal("http://nancyfx.org/optional/123", uriString.ToString());
+    }
+
+    [Fact]
+    public void generate_absolute_uri_correctly_when_route_has_optional_with_default()
+    {
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "default", new { id = 123});
+
+      Assert.Equal("http://nancyfx.org/default/123", uriString.ToString());
     }
 
     [Fact]
