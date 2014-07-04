@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Christian Horsdal</authors>
+    <owners>Christian Horsdal</owners>
+    <licenseUrl>https://github.com/horsdal/Nancy.Linker/blob/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/horsdal/Nancy.Linker/</projectUrl>
+<!--    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple URI builder for named Nancy routes</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>Nancy</tags>
+    <dependencies>
+        <dependency id="Nancy" version="0.23.0"/>
+    </dependencies>
+  </metadata>
+</package>
