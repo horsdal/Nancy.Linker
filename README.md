@@ -16,7 +16,7 @@ public class BazModule : NancyModule
   public BazModule(IResourceLinker linker)
   {
     var absoluteLink = linker..BuildAbsoluteUri(this.Context, "aNamedRoute", parameters: new {id = 123})
-    var relativeLink = linker..BuildAbsoluteUri(this.Context, "aNamedRoute", parameters: new {id = 123})
+    var relativeLink = linker..BuildRelativeUri(this.Context, "aNamedRoute", parameters: new {id = 123})
   }
 }
 ```
