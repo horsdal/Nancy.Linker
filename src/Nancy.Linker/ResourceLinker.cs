@@ -3,7 +3,9 @@
   using System;
   using System.Collections.Generic;
   using System.ComponentModel;
+  using System.Globalization;
   using System.Linq;
+  using System.Text.RegularExpressions;
   using Extensions;
   using Nancy;
   using Nancy.Routing;
@@ -47,27 +49,29 @@
 
     private static string GetSegmentValue(string segment, IDictionary<string, string> parameterDictionary, string current)
     {
-      NotRegexSegment(segment);
       var res = TryGetParameterValue(segment, parameterDictionary);
       if (res == null)
         throw new ArgumentException(string.Format("Value for path segment {0} missing", segment), "parameters");
       return string.Concat(current, "/", res);
     }
 
-    private static void NotRegexSegment(string segment)
-    {
-      if (segment.StartsWith("("))
-        throw new ArgumentException("Building URI for routes with regex segment not supported", "routeName");
-    }
-
     private static string TryGetParameterValue(string segment, IDictionary<string, string> parameterDictionary)
     {
-      if (segment.IsParameterized())
+      if (segment.StartsWith("("))
+        return GetRegexSegmentValue(segment, parameterDictionary);
+      else if (segment.IsParameterized())
         return GetParameterizedSegmentValue(segment, parameterDictionary);
       else if (IsContrainedParameter(segment))
-         return GetConstrainedParamterValue(segment, parameterDictionary);
+        return GetConstrainedParamterValue(segment, parameterDictionary);
       else
         return segment;
+    }
+
+    private static string GetRegexSegmentValue(string segment, IDictionary<string, string> parameterDictionary)
+    {
+      return
+      Regex.Replace(segment, @"\(\?<(?<name>.*?)>.*?\)",
+                    x => parameterDictionary[x.Groups["name"].Value]);
     }
 
     private static string GetConstrainedParamterValue(string segment, IDictionary<string, string> parameterDictionary)
@@ -114,9 +118,10 @@
       var dictionary = anonymousInstance as IDictionary<string, string>;
       if (dictionary != null) return dictionary;
 
-      return TypeDescriptor.GetProperties(anonymousInstance)
-        .OfType<PropertyDescriptor>()
-        .ToDictionary(p => p.Name, p => p.GetValue(anonymousInstance).ToString());
+      return 
+        TypeDescriptor.GetProperties(anonymousInstance)
+          .OfType<PropertyDescriptor>()
+          .ToDictionary(p => p.Name, p => p.GetValue(anonymousInstance).ToString());
     }
   }
 }

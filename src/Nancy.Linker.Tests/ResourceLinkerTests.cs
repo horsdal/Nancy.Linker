@@ -54,7 +54,7 @@
       Assert.Equal("http://nancyfx.org/intConstraint/123", uriString.ToString());
     }
 
-    [Fact(Skip = "might not want to support regex routes??")]
+    [Fact(/*Skip = "might not want to support regex routes??"*/)]
     public void generate_absolute_uri_correctly_when_route_has_regex()
     {
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "regex", new { id = 123 });
@@ -99,14 +99,6 @@
     {
       Assert.Throws<ArgumentException>(() =>
         TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar")
-      );
-    }
-
-    [Fact]
-    public void throw_if_route_has_regex()
-    {
-      Assert.Throws<ArgumentException>(() =>
-        TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "regex")
       );
     }
 
