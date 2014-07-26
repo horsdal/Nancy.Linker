@@ -43,8 +43,8 @@
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var realizedPath = 
         this.segmentExtractor.Extract(pathTemplate)
-        .Aggregate("", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
-      return new Uri(GetBaseUri(context), realizedPath);
+        .Aggregate("~", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
+      return new Uri(GetBaseUri(context), context.ToFullPath(realizedPath));
     }
 
     private static string GetSegmentValue(string segment, IDictionary<string, string> parameterDictionary, string current)
@@ -113,7 +113,7 @@
       return new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative);
     }
 
-      private static IDictionary<string, string> ToDictionary(object anonymousInstance)
+    private static IDictionary<string, string> ToDictionary(object anonymousInstance)
     {
       var dictionary = anonymousInstance as IDictionary<string, string>;
       if (dictionary != null) return dictionary;
