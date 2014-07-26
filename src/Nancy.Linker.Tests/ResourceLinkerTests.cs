@@ -17,6 +17,7 @@
         TestModule.linker = linker;
         Get["foo", "/foo"] = _ => 200;
         Get["bar", "/bar/{id}"] = _ => 200;
+        Get["no segments", "/"] = _ => 200;
         Get["constraint", "/intConstraint/{id: int}"] = _ => 200;
         Get["regex", @"/regex/(?<id>[\d]{ 1,7})"] = _ => 200;
         Get["optional", "optional/{id?}"] = _ => 200;
@@ -44,6 +45,14 @@
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "bar", new {id = 123 });
 
       Assert.Equal("http://nancyfx.org/bar/123", uriString.ToString());
+    }
+
+    [Fact]
+    public void generate_absolute_uri_correctly_when_route_has_segments()
+    {
+      var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/").Context, "no segments");
+
+      Assert.Equal("http://nancyfx.org/", uriString.ToString());
     }
 
     [Fact]
