@@ -27,8 +27,7 @@
 
     public ResourceLinker_Should()
     {
-      app = new Browser(with => with.Module<TestModule>(), 
-      defaults: to => to.HostName("nancyfx.org"));
+      app = new Browser(with => with.Module<TestModule>(), defaults: to => to.HostName("nancyfx.org"));
     }
 
     [Fact]
@@ -63,7 +62,7 @@
       Assert.Equal("http://nancyfx.org/intConstraint/123", uriString.ToString());
     }
 
-    [Fact(/*Skip = "might not want to support regex routes??"*/)]
+    [Fact]
     public void generate_absolute_uri_correctly_when_route_has_regex()
     {
       var uriString = TestModule.linker.BuildAbsoluteUri(app.Get("/foo").Context, "regex", new { id = 123 });

@@ -47,6 +47,11 @@
       return new Uri(GetBaseUri(context), context.ToFullPath(realizedPath));
     }
 
+    public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
+    {
+      return new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative);
+    }
+
     private static string GetSegmentValue(string segment, IDictionary<string, string> parameterDictionary, string current)
     {
       var res = TryGetParameterValue(segment, parameterDictionary);
@@ -106,11 +111,6 @@
           ? context.Request.Url.SiteBase.TrimEnd('/')
           : context.Request.Url.Scheme + "://localhost";
       return new Uri(baseUriString);
-    }
-
-    public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
-    {
-      return new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative);
     }
 
     private static IDictionary<string, string> ToDictionary(object anonymousInstance)
