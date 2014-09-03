@@ -43,7 +43,7 @@
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var realizedPath = 
         this.segmentExtractor.Extract(pathTemplate)
-        .Aggregate("~", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
+        .Aggregate("~", (accumulatedPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedPath));
       return new Uri(GetBaseUri(context), context.ToFullPath(realizedPath));
     }
 
