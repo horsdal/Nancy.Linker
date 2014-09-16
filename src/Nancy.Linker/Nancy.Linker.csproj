@@ -10,6 +10,7 @@
     <RootNamespace>Nancy.Linker</RootNamespace>
     <AssemblyName>Nancy.Linker</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  <LangVersion>experimental</LangVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>

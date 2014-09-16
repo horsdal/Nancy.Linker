@@ -6,14 +6,8 @@
 
   public class Registration : IRegistrations
   {
-    public IEnumerable<TypeRegistration> TypeRegistrations
-    {
-      get
-      {
-        return Enumerable.Repeat(new TypeRegistration(typeof(IResourceLinker), typeof(ResourceLinker)), 1);
-      }
-    }
-    public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; private set; }
-    public IEnumerable<InstanceRegistration> InstanceRegistrations { get; private set; }
+    public IEnumerable<TypeRegistration> TypeRegistrations { get; } = Enumerable.Repeat(new TypeRegistration(typeof(IResourceLinker), typeof(ResourceLinker)), 1);
+    public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; } = null;
+    public IEnumerable<InstanceRegistration> InstanceRegistrations { get; } = null;
   }
 }

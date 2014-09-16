@@ -3,7 +3,6 @@
   using System;
   using System.Collections.Generic;
   using System.ComponentModel;
-  using System.Globalization;
   using System.Linq;
   using System.Text.RegularExpressions;
   using Extensions;
@@ -16,10 +15,10 @@
     Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null);
   }
 
-  public class ResourceLinker : IResourceLinker
+  public class ResourceLinker(IRouteCacheProvider routesProvider, IRouteSegmentExtractor extractor) : IResourceLinker
   {
-    private readonly IRouteCacheProvider routesProvider;
-    private readonly IRouteSegmentExtractor segmentExtractor;
+    private readonly IRouteCacheProvider routesProvider = routesProvider;
+    private readonly IRouteSegmentExtractor segmentExtractor = extractor;
     private List<RouteDescription> allRoutes = null; 
     private List<RouteDescription> AllRoutes
     {
@@ -31,19 +30,13 @@
       }
     }
 
-    public ResourceLinker(IRouteCacheProvider routesProvider, IRouteSegmentExtractor extractor)
-    {
-      this.routesProvider = routesProvider;
-      this.segmentExtractor = extractor;
-    }
-
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
     {
       var parameterDictionary = ToDictionary(parameters as object ?? new { });
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var realizedPath = 
         this.segmentExtractor.Extract(pathTemplate)
-        .Aggregate("~", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
+            .Aggregate("~", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
       return new Uri(GetBaseUri(context), context.ToFullPath(realizedPath));
     }
 
@@ -81,8 +74,7 @@
 
     private static string GetConstrainedParamterValue(string segment, IDictionary<string, string> parameterDictionary)
     {
-      string res = null;
-      parameterDictionary.TryGetValue(segment.Substring(1, segment.IndexOf(':') - 1).Trim(), out res);
+      parameterDictionary.TryGetValue(segment.Substring(1, segment.IndexOf(':') - 1).Trim(), out var res);
       return res;
     }
 

@@ -10,6 +10,7 @@
     <RootNamespace>Nancy.Linker.Tests</RootNamespace>
     <AssemblyName>Nancy.Linker.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <LangVersion>experimental</LangVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -66,6 +67,9 @@
       <Project>{790EF544-866F-42FE-8B60-7BDAA734ACC9}</Project>
       <Name>Nancy.Linker</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
