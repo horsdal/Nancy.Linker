@@ -4,15 +4,16 @@
   using Testing;
   using Xunit;
 
-  public class ResourceLinker_Should()
+  public class ResourceLinker_Should
   {
     private Browser app = new Browser(with => with.Module<TestModule>(), defaults: to => to.HostName("nancyfx.org"));
 
-    public class TestModule(IResourceLinker linker) : NancyModule
+    public class TestModule : NancyModule
     {
       public static IResourceLinker linker;
 
-      {
+      public TestModule(IResourceLinker linker)
+    {
         TestModule.linker = linker;
         Get["foo", "/foo"] = _ => 200;
         Get["bar", "/bar/{id}"] = _ => 200;

@@ -15,10 +15,10 @@
     Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null);
   }
 
-  public class ResourceLinker(IRouteCacheProvider routesProvider, IRouteSegmentExtractor extractor) : IResourceLinker
+  public class ResourceLinker: IResourceLinker
   {
-    private readonly IRouteCacheProvider routesProvider = routesProvider;
-    private readonly IRouteSegmentExtractor segmentExtractor = extractor;
+    private readonly IRouteCacheProvider routesProvider;
+    private readonly IRouteSegmentExtractor segmentExtractor;
     private List<RouteDescription> allRoutes = null; 
     private List<RouteDescription> AllRoutes
     {
@@ -28,6 +28,12 @@
           this.allRoutes = this.routesProvider.GetCache().SelectMany(pair => pair.Value.Select(tuple => tuple.Item2)).ToList();
         return this.allRoutes;
       }
+    }
+
+    public ResourceLinker(IRouteCacheProvider routesProvider, IRouteSegmentExtractor extractor)
+    {
+      this.routesProvider = routesProvider;
+      this.segmentExtractor = extractor;
     }
 
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
@@ -74,7 +80,8 @@
 
     private static string GetConstrainedParamterValue(string segment, IDictionary<string, string> parameterDictionary)
     {
-      parameterDictionary.TryGetValue(segment.Substring(1, segment.IndexOf(':') - 1).Trim(), out var res);
+      string res;
+      parameterDictionary.TryGetValue(segment.Substring(1, segment.IndexOf(':') - 1).Trim(), out res);
       return res;
     }
 
