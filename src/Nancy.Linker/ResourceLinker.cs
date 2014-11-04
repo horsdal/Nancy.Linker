@@ -47,15 +47,13 @@
     }
 
     public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
-    {
-      return new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative);
-    }
+      => new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative);
 
     private static string GetSegmentValue(string segment, IDictionary<string, string> parameterDictionary, string current)
     {
       var res = TryGetParameterValue(segment, parameterDictionary);
       if (res == null)
-        throw new ArgumentException(string.Format("Value for path segment {0} missing", segment), "parameters");
+        throw new ArgumentException(string.Format("Value for path segment {0} missing", segment), "segment");
       return string.Concat(current, "/", res);
     }
 
@@ -72,11 +70,7 @@
     }
 
     private static string GetRegexSegmentValue(string segment, IDictionary<string, string> parameterDictionary)
-    {
-      return
-      Regex.Replace(segment, @"\(\?<(?<name>.*?)>.*?\)",
-                    x => parameterDictionary[x.Groups["name"].Value]);
-    }
+      => Regex.Replace(segment, @"\(\?<(?<name>.*?)>.*?\)", x => parameterDictionary[x.Groups["name"].Value]);
 
     private static string GetConstrainedParamterValue(string segment, IDictionary<string, string> parameterDictionary)
     {
@@ -85,14 +79,11 @@
       return res;
     }
 
-    private static bool IsContrainedParameter(string segment)
-    {
-      return segment.Contains(':');
-    }
+    private static bool IsContrainedParameter(string segment) => segment.Contains(':');
 
     private static string GetParameterizedSegmentValue(string segment, IDictionary<string, string> parameterDictionary)
     {
-      string res = null;
+      string res;
       var segmentInfo = segment.GetParameterDetails().Single();
       if (!segmentInfo.IsOptional || string.IsNullOrEmpty(segmentInfo.DefaultValue))
         parameterDictionary.TryGetValue(segmentInfo.Name, out res);
