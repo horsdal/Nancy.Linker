@@ -53,7 +53,7 @@
     {
       var res = TryGetParameterValue(segment, parameterDictionary);
       if (res == null)
-        throw new ArgumentException(string.Format("Value for path segment {0} missing", segment), "segment");
+        throw new ArgumentException(string.Format("Value for path segment {0} missing", segment), nameof(segment));
       return string.Concat(current, "/", res);
     }
 
@@ -111,7 +111,7 @@
       return 
         TypeDescriptor.GetProperties(anonymousInstance)
           .OfType<PropertyDescriptor>()
-          .ToDictionary(p => p.Name, p => p.GetValue(anonymousInstance).ToString());
+          .ToDictionary(p => p.Name, p => p.GetValue(anonymousInstance)?.ToString() ?? "");
     }
   }
 }
