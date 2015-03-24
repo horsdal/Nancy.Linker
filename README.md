@@ -1,4 +1,4 @@
-# Nancy.Linker
+# Nancy.Linker [![NuGet Status](http://img.shields.io/nuget/v/Nancy.Linker.svg?style=flat)](https://www.nuget.org/packages/Nancy.Linker/)
 
 Simple URI builder for named Nancy routes
 
