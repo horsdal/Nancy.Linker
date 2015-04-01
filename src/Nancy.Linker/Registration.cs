@@ -2,7 +2,7 @@
 {
   using System.Collections.Generic;
   using System.Linq;
-  using Bootstrapper;
+  using Nancy.Bootstrapper;
 
   public class Registration : IRegistrations
   {

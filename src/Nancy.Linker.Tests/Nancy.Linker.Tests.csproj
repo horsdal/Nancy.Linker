@@ -10,7 +10,7 @@
     <RootNamespace>Nancy.Linker.Tests</RootNamespace>
     <AssemblyName>Nancy.Linker.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <LangVersion>experimental</LangVersion>
+    <LangVersion>6</LangVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -56,6 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NancyContextExtensions_Should.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceLinkerTests.cs" />
   </ItemGroup>
