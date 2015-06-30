@@ -44,7 +44,6 @@
         throw new UnknownRouteException(routeName, this.AllRoutes);
       }
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
-    
       var realizedPath = 
         this.segmentExtractor.Extract(pathTemplate)
             .Aggregate("~", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
