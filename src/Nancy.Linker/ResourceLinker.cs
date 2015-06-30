@@ -43,7 +43,7 @@
       {
         throw new UnknownRouteException(routeName, this.AllRoutes);
       }
-      string pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
+      var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
     
       var realizedPath = 
         this.segmentExtractor.Extract(pathTemplate)
