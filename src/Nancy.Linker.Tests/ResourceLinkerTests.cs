@@ -108,28 +108,16 @@
     [Fact]
     public void throw_if_route_cannot_be_found()
     {
-      Assert.Throws<UnknownRouteException>(() =>
+      var actual = Assert.Throws<UnknownRouteException>(() =>
         TestModule.linker.BuildAbsoluteUri(this.app.Get("/foo").Context, "missing_route")
       );
-    }
-
-    [Fact]
-    public void unknown_route_exception_lists_available_route_names()
-    {
-      try
-      {
-        TestModule.linker.BuildAbsoluteUri(this.app.Get("/foo").Context, "missing_route");
-      }
-      catch (UnknownRouteException e)
-      {
-        Assert.Contains("foo", e.Message);
-        Assert.Contains("bar", e.Message);
-        Assert.Contains("no segments", e.Message);
-        Assert.Contains("constraint", e.Message);
-        Assert.Contains("regex", e.Message);
-        Assert.Contains("optional", e.Message);
-        Assert.Contains("default", e.Message);
-      }
+        Assert.Contains("foo", actual.Message);
+        Assert.Contains("bar", actual.Message);
+        Assert.Contains("no segments", actual.Message);
+        Assert.Contains("constraint", actual.Message);
+        Assert.Contains("regex", actual.Message);
+        Assert.Contains("optional", actual.Message);
+        Assert.Contains("default", actual.Message);
     }
 
     [Fact]
