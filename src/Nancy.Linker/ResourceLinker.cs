@@ -39,6 +39,10 @@
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
     {
       var parameterDictionary = ToDictionary(parameters as object ?? new { });
+      if (!this.AllRoutes.Any(r => r.Name == routeName))
+      {
+        throw new UnknownRouteException(routeName, this.AllRoutes);
+      }
       var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
       var realizedPath = 
         this.segmentExtractor.Extract(pathTemplate)
