@@ -10,7 +10,7 @@
     <RootNamespace>Nancy.Linker</RootNamespace>
     <AssemblyName>Nancy.Linker</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-  <LangVersion>6</LangVersion>
+    <LangVersion>6</LangVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
@@ -45,7 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PassthroughQueryFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryFilter.cs" />
     <Compile Include="Registration.cs" />
     <Compile Include="ResourceLinker.cs" />
   </ItemGroup>
