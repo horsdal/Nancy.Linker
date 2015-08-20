@@ -28,7 +28,7 @@
     [Fact]
     public void throw_if_apply_is_passed_null_as_uri()
     {
-      PassthroughUriFilter filter = new PassthroughUriFilter(new string[] { });
+      var filter = new PassthroughUriFilter(new string[] { });
 
       Assert.Throws<ArgumentNullException>(() => filter.Apply(null, app.Get("").Context));
     }
@@ -36,7 +36,7 @@
     [Fact]
     public void throw_if_apply_is_passed_null_as_context()
     {
-      PassthroughUriFilter filter = new PassthroughUriFilter(new string[] { });
+      var filter = new PassthroughUriFilter(new string[] { });
 
       Assert.Throws<ArgumentNullException>(() => filter.Apply(new Uri("http://www.nancyfx.org"), null));
     }
@@ -44,9 +44,9 @@
     [Fact]
     public void passes_the_query_through()
     {
-      PassthroughUriFilter filter = new PassthroughUriFilter(new string[] { "foo" });
+      var filter = new PassthroughUriFilter(new string[] { "foo" });
 
-      Browser appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => to.Query("foo", "bar"));
+      var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => to.Query("foo", "bar"));
 
       Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
 
@@ -56,9 +56,9 @@
     [Fact]
     public void passes_multiple_queries_through()
     {
-      PassthroughUriFilter filter = new PassthroughUriFilter(new string[] { "foo" }, new PassthroughUriFilter(new string[] { "blip" }));
+      var filter = new PassthroughUriFilter(new string[] { "foo" }, new PassthroughUriFilter(new string[] { "blip" }));
 
-      Browser appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => { to.Query("foo", "bar"); to.Query("blib", "blop"); });
+      var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => { to.Query("foo", "bar"); to.Query("blib", "blop"); });
 
       Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
 
@@ -68,9 +68,9 @@
     [Fact]
     public void passes_multiple_queries_through_using_multiple_filters()
     {
-      PassthroughUriFilter filter = new PassthroughUriFilter(new string[] { "foo" }, new PassthroughUriFilter(new string[] { "blib" }));
+      var filter = new PassthroughUriFilter(new string[] { "foo" }, new PassthroughUriFilter(new string[] { "blib" }));
 
-      Browser appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => { to.Query("foo", "bar"); to.Query("blib", "blob"); });
+      var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => { to.Query("foo", "bar"); to.Query("blib", "blob"); });
 
       Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
 
@@ -80,9 +80,9 @@
     [Fact]
     public void does_not_passes_the_query_through()
     {
-      PassthroughUriFilter filter = new PassthroughUriFilter(new string[] { "does_not_exist" });
+      var filter = new PassthroughUriFilter(new string[] { "does_not_exist" });
 
-      Browser appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => to.Query("foo", "bar"));
+      var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => to.Query("foo", "bar"));
 
       Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
 
