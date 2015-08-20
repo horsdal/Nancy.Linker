@@ -58,7 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PassthroughQueryFilterTests.cs" />
+    <Compile Include="PassthroughUriFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceLinkerTests.cs" />
   </ItemGroup>

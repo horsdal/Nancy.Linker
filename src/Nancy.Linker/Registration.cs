@@ -7,7 +7,7 @@
   {
     public IEnumerable<TypeRegistration> TypeRegistrations { get; } = new TypeRegistration[] {
       new TypeRegistration(typeof(IResourceLinker), typeof(ResourceLinker)),
-      new TypeRegistration(typeof(IQueryFilter), typeof(QueryFilter))
+      new TypeRegistration(typeof(IUriFilter), typeof(IdentityUriFilter))
     };
 
     public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; } = null;

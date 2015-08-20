@@ -19,7 +19,7 @@
   {
     private readonly IRouteCacheProvider routesProvider;
     private readonly IRouteSegmentExtractor segmentExtractor;
-    private readonly IQueryFilter queryFilter;
+    private readonly IUriFilter uriFilter;
     private List<RouteDescription> allRoutes = null; 
     private List<RouteDescription> AllRoutes
     {
@@ -31,11 +31,11 @@
       }
     }
 
-    public ResourceLinker(IRouteCacheProvider routesProvider, IRouteSegmentExtractor extractor, IQueryFilter queryFilter)
+    public ResourceLinker(IRouteCacheProvider routesProvider, IRouteSegmentExtractor extractor, IUriFilter queryFilter)
     {
       this.routesProvider = routesProvider;
       this.segmentExtractor = extractor;
-      this.queryFilter = queryFilter;
+      this.uriFilter = queryFilter;
     }
 
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
@@ -45,11 +45,11 @@
       var realizedPath = 
         this.segmentExtractor.Extract(pathTemplate)
             .Aggregate("~", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
-      return queryFilter.Apply(new Uri(GetBaseUri(context), context.ToFullPath(realizedPath)), context);
+      return uriFilter.Apply(new Uri(GetBaseUri(context), context.ToFullPath(realizedPath)), context);
     }
 
     public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
-      => queryFilter.Apply(new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative), context);
+      => uriFilter.Apply(new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative), context);
 
     private static string GetSegmentValue(string segment, IDictionary<string, string> parameterDictionary, string current)
     {
