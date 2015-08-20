@@ -20,7 +20,7 @@
       this.queryNamesToPassThrough = queryNamesToPassThrough.ToList();
     }
 
-    public override Uri Apply(Uri uri, NancyContext context)
+    protected override Uri OnApply(Uri uri, NancyContext context)
     {
       if (uri == null) throw new ArgumentNullException(nameof(uri));
       if (context == null) throw new ArgumentNullException(nameof(context));
@@ -38,7 +38,7 @@
       UriBuilder builder = new UriBuilder(uri);
       builder.Query = query.ToString();
 
-      return base.Apply(builder.Uri, context);
+      return builder.Uri;
     }
   }
 }

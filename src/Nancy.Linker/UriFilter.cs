@@ -22,8 +22,6 @@
 
   /// <summary>
   /// Base class with decorator pattern behaviour.
-  /// Subclass this class, forward the constructor argument and call base 
-  /// in the <see cref="Apply"/> method with a possible modified uri. See example.
   /// </summary>
   /// <example>
   ///   <code>
@@ -33,19 +31,22 @@
   ///       {
   ///       }
   /// 
-  ///       public Uri Apply(Uri uri, NancyContext context)
+  ///       protected override OnUri Apply(Uri uri, NancyContext context)
   ///       {
   ///         Uri resultUri = // Do your work here.
-  ///         return base.Apply(resultUri, context);
+  ///         return resultUri;
   ///       }
   ///     }
   ///   </code>
   /// </example>
-  public class UriFilter : IUriFilter
+  public abstract class UriFilter : IUriFilter
   {
     private readonly IUriFilter nextFilter;
 
-    public UriFilter(IUriFilter nextFilter = null)
+    /// <summary>
+    /// </summary>
+    /// <param name="nextFilter">The next filter or null.</param>
+    public UriFilter(IUriFilter nextFilter)
     {
       this.nextFilter = nextFilter;
     }
@@ -54,17 +55,21 @@
     /// Implements the decorator behaviour by calling the nextFilter if has a not null value.
     /// If nextFilter is null, then this method is the identity.
     /// </summary>
-    public virtual Uri Apply(Uri uri, NancyContext context)
+    public Uri Apply(Uri uri, NancyContext context)
     {
+      Uri resultUri = OnApply(uri, context);
+
       if (this.nextFilter != null)
-      {
-        return this.nextFilter.Apply(uri, context);
+      {       
+        return this.nextFilter.Apply(resultUri, context);
       }
       else
       {
-        return uri;
+        return resultUri;
       }
     }
+
+    protected abstract Uri OnApply(Uri uri, NancyContext context);
   }
 
 
