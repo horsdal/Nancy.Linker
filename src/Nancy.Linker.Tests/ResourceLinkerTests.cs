@@ -106,6 +106,21 @@
     }
 
     [Fact]
+    public void throw_if_route_cannot_be_found()
+    {
+      var actual = Assert.Throws<UnknownRouteException>(() =>
+        TestModule.linker.BuildAbsoluteUri(this.app.Get("/foo").Context, "missing_route")
+      );
+        Assert.Contains("foo", actual.Message);
+        Assert.Contains("bar", actual.Message);
+        Assert.Contains("no segments", actual.Message);
+        Assert.Contains("constraint", actual.Message);
+        Assert.Contains("regex", actual.Message);
+        Assert.Contains("optional", actual.Message);
+        Assert.Contains("default", actual.Message);
+    }
+
+    [Fact]
     public void default_to_localhost_when_request_has_no_host()
     {
       var appWithoutHost = new Browser(with => with.Module<TestModule>());

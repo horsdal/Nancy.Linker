@@ -18,8 +18,6 @@
     Uri Apply(Uri uri, NancyContext context);
   }
 
-
-
   /// <summary>
   /// Base class with decorator pattern behaviour.
   /// </summary>
@@ -57,22 +55,16 @@
     /// </summary>
     public Uri Apply(Uri uri, NancyContext context)
     {
-      Uri resultUri = OnApply(uri, context);
+      var resultUri = OnApply(uri, context);
 
       if (this.nextFilter != null)
-      {       
         return this.nextFilter.Apply(resultUri, context);
-      }
       else
-      {
         return resultUri;
-      }
     }
 
     protected abstract Uri OnApply(Uri uri, NancyContext context);
   }
-
-
 
   /// <summary>
   /// Default query filter that does not append anything.

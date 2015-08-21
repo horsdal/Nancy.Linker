@@ -22,20 +22,22 @@
 
     protected override Uri OnApply(Uri uri, NancyContext context)
     {
-      if (uri == null) throw new ArgumentNullException(nameof(uri));
-      if (context == null) throw new ArgumentNullException(nameof(context));
+      if (uri == null)
+        throw new ArgumentNullException(nameof(uri));
+      if (context == null)
+        throw new ArgumentNullException(nameof(context));
 
       var query = HttpUtility.ParseQueryString(uri.Query);
 
-      foreach (string name in queryNamesToPassThrough)
+      foreach (string name in this.queryNamesToPassThrough)
       {
-        DynamicDictionaryValue queryValue = context.Request.Query[name];
+        var queryValue = context.Request.Query[name];
         if (!queryValue.HasValue) continue;
 
         query.Add(name, queryValue.Value.ToString());
       }
 
-      UriBuilder builder = new UriBuilder(uri);
+      var builder = new UriBuilder(uri);
       builder.Query = query.ToString();
 
       return builder.Uri;

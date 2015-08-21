@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PassthroughUriFilter.cs" />
+    <Compile Include="UnknownRouteException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UriFilter.cs" />
     <Compile Include="Registration.cs" />

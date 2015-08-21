@@ -41,9 +41,11 @@
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
     {
       var parameterDictionary = ToDictionary(parameters as object ?? new { });
-      var pathTemplate = this.AllRoutes.Single(r => r.Name == routeName).Path;
+      var pathTemplate = this.AllRoutes.SingleOrDefault(r => r.Name == routeName);
+      if (pathTemplate == null)
+        throw new UnknownRouteException(routeName, this.AllRoutes);
       var realizedPath = 
-        this.segmentExtractor.Extract(pathTemplate)
+        this.segmentExtractor.Extract(pathTemplate.Path)
             .Aggregate("~", (accumulatedtPath, segment) => GetSegmentValue(segment, parameterDictionary, accumulatedtPath));
       return uriFilter.Apply(new Uri(GetBaseUri(context), context.ToFullPath(realizedPath)), context);
     }
