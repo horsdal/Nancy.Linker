@@ -38,5 +38,9 @@ public class Bootstrapper : DefaultNancyBootstrapper
 
 ## More information
 
+### On My Blog
 http://www.horsdal-consult.dk/search/label/Nancy.Linker
+
+### On Other Blogs
+http://codeopinion.com/nancy-linker-nancyfx-uri-builder/
 
