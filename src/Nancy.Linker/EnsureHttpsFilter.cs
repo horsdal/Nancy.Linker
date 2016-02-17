@@ -18,6 +18,7 @@
 
       UriBuilder builder = new UriBuilder(uri);
       builder.Scheme = "https";
+      builder.Port = 443;
       return builder.Uri;
     }
   }
