@@ -1,4 +1,4 @@
-# Nancy.Linker [![NuGet Status](http://img.shields.io/nuget/v/Nancy.Linker.svg?style=flat)](https://www.nuget.org/packages/Nancy.Linker/) [![License](https://img.shields.io/github/license/horsdal/nancy.linker.svg)](./LICENSE)
+# Nancy.Linker [![NuGet Status](http://img.shields.io/nuget/v/Nancy.Linker.svg?style=flat)](https://www.nuget.org/packages/Nancy.Linker/) [![License](https://img.shields.io/github/license/horsdal/nancy.linker.svg)](./LICENSE) [![Build status](https://ci.appveyor.com/api/projects/status/ksd1rsuix1r085q1?svg=true)](https://ci.appveyor.com/project/horsdal/nancy-linker)
 
 Simple URI builder for named Nancy routes with optional pass through of query parameters.
 
