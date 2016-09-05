@@ -217,4 +217,7 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
+# Rider
+.idea
+
 Nancy.Linker.*.nupkg
