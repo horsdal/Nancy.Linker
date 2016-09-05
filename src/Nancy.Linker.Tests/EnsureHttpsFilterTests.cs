@@ -15,7 +15,7 @@
       public TestModule(IResourceLinker linker)
       {
         TestModule.linker = linker;
-        this.Get[""] = _ => 200;
+        this.Get("", _ => 200);
       }
     }
 
