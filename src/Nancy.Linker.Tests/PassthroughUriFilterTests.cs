@@ -1,4 +1,6 @@
-﻿namespace Nancy.Linker.Tests
+﻿using System.Threading.Tasks;
+
+namespace Nancy.Linker.Tests
 {
   using System;
   using Testing;
@@ -15,7 +17,7 @@
       public TestModule(IResourceLinker linker)
       {
         TestModule.linker = linker;
-        this.Get[""] = _ => 200;
+        this.Get("", _ => 200);
       }
     }
 
@@ -30,7 +32,7 @@
     {
       var filter = new PassthroughUriFilter(new string[] { });
 
-      Assert.Throws<ArgumentNullException>(() => filter.Apply(null, app.Get("").Context));
+      Assert.Throws<ArgumentNullException>(() => filter.Apply(null, app.Get("").Result.Context));
     }
 
     [Fact]
@@ -42,49 +44,53 @@
     }
 
     [Fact]
-    public void passes_the_query_through()
+    public async Task passes_the_query_through()
     {
       var filter = new PassthroughUriFilter(new string[] { "foo" });
 
       var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => to.Query("foo", "bar"));
 
-      Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
+      var response = await appWithQueryString.Get("");
+      var result = filter.Apply(new Uri("http://www.nancyfx.org"), response.Context);
 
       Assert.Equal("?foo=bar", result.Query);
     }
 
     [Fact]
-    public void passes_multiple_queries_through()
+    public async Task passes_multiple_queries_through()
     {
       var filter = new PassthroughUriFilter(new string[] { "foo" }, new PassthroughUriFilter(new string[] { "blip" }));
 
       var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => { to.Query("foo", "bar"); to.Query("blib", "blop"); });
 
-      Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
+      var response = await appWithQueryString.Get("");
+      var result = filter.Apply(new Uri("http://www.nancyfx.org"), response.Context);
 
       Assert.Equal("?foo=bar", result.Query);
     }
 
     [Fact]
-    public void passes_multiple_queries_through_using_multiple_filters()
+    public async Task passes_multiple_queries_through_using_multiple_filters()
     {
       var filter = new PassthroughUriFilter(new string[] { "foo" }, new PassthroughUriFilter(new string[] { "blib" }));
 
       var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => { to.Query("foo", "bar"); to.Query("blib", "blob"); });
 
-      Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
+      var response = await appWithQueryString.Get("");
+      var result = filter.Apply(new Uri("http://www.nancyfx.org"), response.Context);
 
       Assert.Equal("?foo=bar&blib=blob", result.Query);
     }
 
     [Fact]
-    public void does_not_passes_the_query_through()
+    public async Task does_not_passes_the_query_through()
     {
       var filter = new PassthroughUriFilter(new string[] { "does_not_exist" });
 
       var appWithQueryString = new Browser(with => with.Module<TestModule>(), defaults: to => to.Query("foo", "bar"));
 
-      Uri result = filter.Apply(new Uri("http://www.nancyfx.org"), appWithQueryString.Get("").Context);
+      var response = await appWithQueryString.Get("");
+      var result = filter.Apply(new Uri("http://www.nancyfx.org"), response.Context);
 
       Assert.Equal("", result.Query);
     }
