@@ -22,6 +22,8 @@
         this.Get["regex", @"/regex/(?<id>[\d]{ 1,7})"] = _ => 200;
         this.Get["optional", "optional/{id?}"] = _ => 200;
         this.Get["default", "default/{id?123}"] = _ => 200;
+        this.Get["duplicate", "/dup1"] = _ => 200;
+        this.Get["duplicate", "/dup2"] = _ => 200;
       }
     }
 
@@ -128,6 +130,20 @@
       var uriString = TestModule.linker.BuildAbsoluteUri(appWithoutHost.Get("/foo").Context, "bar", new { id = 123 });
 
       Assert.Equal("http://localhost/bar/123", uriString.ToString());
+    }
+
+    [Fact]
+    public void throw_nice_exception_on_deuplicate_route_name()
+    {
+      var ex =
+        Assert.Throws<UnknownRouteException>(() =>
+        {
+          var appWithoutHost = new Browser(with => with.Module<TestModule>());
+
+          TestModule.linker.BuildAbsoluteUri(appWithoutHost.Get("/foo").Context, "duplicate", new {id = 123});
+        });
+
+       Assert.Equal("Nancy.Linker found two routes called \"duplicate\", but can only create links for uniquely named routes", ex.Message);
     }
   }
 }

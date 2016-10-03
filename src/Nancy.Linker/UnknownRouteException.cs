@@ -8,7 +8,6 @@
   public class UnknownRouteException : Exception
   {
     private const string message = @"Could not find a route named {0}
-
 The following routes are available:
 {1}";
 
@@ -16,12 +15,15 @@ The following routes are available:
       string missingRoute, 
       IEnumerable<RouteDescription> routes)
       : base(string.Format(message, missingRoute, RouteList(routes)))
-    {
-    }
+    {}
+
+    public UnknownRouteException(string message, Exception innerException)
+      : base(message, innerException)
+    {}
 
     private static string RouteList(IEnumerable<RouteDescription> routes)
     {
-      var lines = routes.Select(rd => string.Format("\t{0}: {1}", rd.Name, rd.Description));
+      var lines = routes.Select(rd => $"\t{rd.Name}: {rd.Description}");
       return string.Join("\n", lines);
     }
   }

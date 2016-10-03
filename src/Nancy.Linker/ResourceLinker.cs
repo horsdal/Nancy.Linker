@@ -41,7 +41,7 @@
     public Uri BuildAbsoluteUri(NancyContext context, string routeName, dynamic parameters = null)
     {
       var parameterDictionary = ToDictionary(parameters as object ?? new { });
-      var pathTemplate = this.AllRoutes.SingleOrDefault(r => r.Name == routeName);
+      var pathTemplate = GetRouteTemplateFromRouteName(routeName);
       if (pathTemplate == null)
         throw new UnknownRouteException(routeName, this.AllRoutes);
       var realizedPath = 
@@ -50,7 +50,21 @@
       return uriFilter.Apply(new Uri(GetBaseUri(context), context.ToFullPath(realizedPath)), context);
     }
 
-    public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
+    private RouteDescription GetRouteTemplateFromRouteName(string routeName)
+    {
+      try
+      {
+        return this.AllRoutes.SingleOrDefault(r => r.Name == routeName);
+      }
+      catch (InvalidOperationException e)
+      {
+        throw new UnknownRouteException(
+          $"Nancy.Linker found two routes called \"{routeName}\", but can only create links for uniquely named routes" ,
+          e);
+      }
+    }
+
+      public Uri BuildRelativeUri(NancyContext context, string routeName, dynamic parameters = null)
       => uriFilter.Apply(new Uri(this.BuildAbsoluteUri(context, routeName, parameters).PathAndQuery, UriKind.Relative), context);
 
     private static string GetSegmentValue(string segment, IDictionary<string, string> parameterDictionary, string current)
